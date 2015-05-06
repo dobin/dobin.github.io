@@ -1,10 +1,1 @@
-{
-  "meta": {
-    "username": "dobin",
-    "repositoryName": "dobin.github.io",
-    "branch": "master"
-  },
-  "theme": {
-    "name": "Casper"
-  }
-}
+{"meta":{"username":"dobin","repositoryName":"dobin.github.io","branch":"master"},"site":{"title":"Dobin","url":"https://dobin.github.io"},"socialnetwork":{},"theme":{"name":"Casper","url":"//dobin.github.io/themes/Casper"}}
