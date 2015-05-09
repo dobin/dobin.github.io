@@ -12,6 +12,8 @@ For tag based injection:
 <p>"
 ----
 
+Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).
+
 For tag value based injection:
 
 [source]
@@ -20,13 +22,15 @@ For tag value based injection:
 "=
 ----
 
+Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).
+
 == SQLu
 
 The old SQL tests:
 
 [source]
 ----
-'BREAK\"
+'BREAK"
         
 OR 41=41
 ' OR '41'='41
@@ -39,13 +43,15 @@ OR 41=41
 ") OR ("41"="41"
 ----
 
+If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.
+
 == SQLs
 
 The new SQL tests:
 
 [source]
 ----
-'BREAK\"
+'BREAK"
 
 ORIG+1-1
 ORIG'+0+'0
@@ -56,3 +62,4 @@ ORIG[0]' 'ORIG[1-END]
 /**/ORIG
 ----
 
+If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.
