@@ -20,14 +20,14 @@
     <meta property="og:site_name" content="Dobin" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="BurpSentinel Payloads" />
-    <meta property="og:description" content="Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 XSS For tag based injection: %3Cp%3E%22 &amp;lt;p&amp;gt;&quot; For tag value based injection: %22%3D &quot;= SQLu The old SQL tests: &#x27;BREAK\&quot; OR 41=41..." />
+    <meta property="og:description" content="Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 XSS For tag based injection: %3Cp%3E%22 &amp;lt;p&amp;gt;&quot; Both of the above will be sent like written above. The 2nd, unencoded version will be..." />
     <meta property="og:url" content="https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html" />
     <meta property="article:published_time" content="2015-05-08T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-05-09T19:25:23.792Z" />
+    <meta property="article:modified_time" content="2015-05-09T19:32:08.276Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="BurpSentinel Payloads" />
-    <meta name="twitter:description" content="Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 XSS For tag based injection: %3Cp%3E%22 &amp;lt;p&amp;gt;&quot; For tag value based injection: %22%3D &quot;= SQLu The old SQL tests: &#x27;BREAK\&quot; OR 41=41..." />
+    <meta name="twitter:description" content="Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 XSS For tag based injection: %3Cp%3E%22 &amp;lt;p&amp;gt;&quot; Both of the above will be sent like written above. The 2nd, unencoded version will be..." />
     <meta name="twitter:url" content="https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html" />
     
     <script type="application/ld+json">
@@ -45,8 +45,8 @@
     "headline": "BurpSentinel Payloads",
     "url": "https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html",
     "datePublished": "2015-05-08T22:00:00.000Z",
-    "dateModified": "2015-05-09T19:25:23.792Z",
-    "description": "Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 XSS For tag based injection: %3Cp%3E%22 &amp;lt;p&amp;gt;&quot; For tag value based injection: %22%3D &quot;= SQLu The old SQL tests: &#x27;BREAK\\&quot; OR 41=41..."
+    "dateModified": "2015-05-09T19:32:08.276Z",
+    "description": "Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 XSS For tag based injection: %3Cp%3E%22 &amp;lt;p&amp;gt;&quot; Both of the above will be sent like written above. The 2nd, unencoded version will be..."
 }
     </script>
 
@@ -98,6 +98,9 @@
 </div>
 </div>
 <div class="paragraph">
+<p>Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).</p>
+</div>
+<div class="paragraph">
 <p>For tag value based injection:</p>
 </div>
 <div class="listingblock">
@@ -105,6 +108,9 @@
 <pre class="highlight"><code>%22%3D
 "=</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).</p>
 </div>
 </div>
 </div>
@@ -116,7 +122,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>'BREAK\"
+<pre class="highlight"><code>'BREAK"
 
 OR 41=41
 ' OR '41'='41
@@ -129,6 +135,9 @@ OR 41=41
 ") OR ("41"="41"</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -139,7 +148,7 @@ OR 41=41
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>'BREAK\"
+<pre class="highlight"><code>'BREAK"
 
 ORIG+1-1
 ORIG'+0+'0
@@ -149,6 +158,9 @@ ORIG[0]'+'ORIG[1-END]
 ORIG[0]' 'ORIG[1-END]
 /**/ORIG</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.</p>
 </div>
 </div>
 </div>
