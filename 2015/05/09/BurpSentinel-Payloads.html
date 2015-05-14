@@ -23,7 +23,7 @@
     <meta property="og:description" content="Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 A short description of the payloads used by BurpSentinel. The payloads are developed to be as efficient as possible. There should be no unecessary payloads. XSS If..." />
     <meta property="og:url" content="https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html" />
     <meta property="article:published_time" content="2015-05-08T22:00:00.000Z" />
-    <meta property="article:modified_time" content="2015-05-14T11:13:41.779Z" />
+    <meta property="article:modified_time" content="2015-05-14T18:22:42.705Z" />
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="BurpSentinel Payloads" />
@@ -45,7 +45,7 @@
     "headline": "BurpSentinel Payloads",
     "url": "https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html",
     "datePublished": "2015-05-08T22:00:00.000Z",
-    "dateModified": "2015-05-14T11:13:41.779Z",
+    "dateModified": "2015-05-14T18:22:42.705Z",
     "description": "Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04 A short description of the payloads used by BurpSentinel. The payloads are developed to be as efficient as possible. There should be no unecessary payloads. XSS If..."
 }
     </script>
@@ -176,17 +176,21 @@ ORIG[0]' 'ORIG[1-END]
 <h2 id="_other">Other</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The tests include command execution tests, and also shellshock. Additionally it will test null bytes (%00).</p>
+<p>The tests include command execution tests, and also shellshock. Additionally it will test null bytes (%00) and tries file inclusion positive test.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>() { :;}; sleep 10
+<pre class="highlight"><code>.\
+./
+() { :;}; sleep 10
+%00
 ;sleep 10
 \" ;sleep 10
-' ;sleep 10
+';sleep 10
 |sleep 10
-\\'
-%00</code></pre>
+&amp; ping -c 10 127.0.0.1
+\" &amp; ping -c 10 127.0.0.1
+' &amp; ping -c 10 127.0.0.1</code></pre>
 </div>
 </div>
 </div>
