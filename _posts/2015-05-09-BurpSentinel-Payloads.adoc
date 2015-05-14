@@ -5,6 +5,8 @@ Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/b
 
 == XSS
 
+If the web app returns <p>", it is vulnerable to XSS. 
+
 For tag based injection:
 [source]
 ----
@@ -25,6 +27,8 @@ For tag value based injection:
 Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).
 
 == SQLu
+
+The SQL tests are positive-based. The BREAK request should return another response than the original request. If one of the follow up request is identical to the original request, the webapp is most likely vulnerable to SQLi. 
 
 The old SQL tests:
 
