@@ -72,16 +72,21 @@ If the attack vector is in POST (HTTP body), try each of the above with and with
 
 == Other
 
-The tests include command execution tests, and also shellshock. Additionally it will test null bytes (%00).
-
+The tests include command execution tests, and also shellshock. Additionally it will test null bytes (%00) and tries file inclusion positive test.
 
 [source]
 ----
+.\
+./
 () { :;}; sleep 10
+%00
 ;sleep 10
 \" ;sleep 10
-' ;sleep 10
+';sleep 10
 |sleep 10
-\\'
-%00
+& ping -c 10 127.0.0.1
+\" & ping -c 10 127.0.0.1
+' & ping -c 10 127.0.0.1
 ----
+
+
