@@ -1,7 +1,7 @@
 = BurpSentinel Payloads
 
 Based on my presentation on BSidesVienna 2014: http://www.slideshare.net/nibod/bsides-viennasentinel-v04
-
+A short description of the payloads used by BurpSentinel. The payloads are developed to be as efficient as possible. There should be no unecessary payloads. 
 
 == XSS
 
@@ -26,9 +26,11 @@ For tag value based injection:
 
 Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).
 
-== SQLu
+== SQL
 
 The SQL tests are positive-based. The BREAK request should return another response than the original request. If one of the follow up request is identical to the original request, the webapp is most likely vulnerable to SQLi. 
+
+=== SQLu
 
 The old SQL tests:
 
@@ -49,7 +51,7 @@ OR 41=41
 
 If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.
 
-== SQLs
+=== SQLs
 
 The new SQL tests:
 
