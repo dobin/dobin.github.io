@@ -72,6 +72,9 @@ If the attack vector is in POST (HTTP body), try each of the above with and with
 
 == Other
 
+The tests include command execution tests, and also shellshock. Additionally it will test null bytes (%00).
+
+
 [source]
 ----
 () { :;}; sleep 10
@@ -80,4 +83,5 @@ If the attack vector is in POST (HTTP body), try each of the above with and with
 ' ;sleep 10
 |sleep 10
 \\'
+%00
 ----
