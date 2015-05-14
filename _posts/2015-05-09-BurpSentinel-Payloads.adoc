@@ -28,7 +28,7 @@ Both of the above will be sent like written above. The 2nd, unencoded version wi
 
 == SQL
 
-The SQL tests are positive-based. The BREAK request should return another response than the original request. If one of the follow up request is identical to the original request, the webapp is most likely vulnerable to SQLi. 
+The SQL tests are positive-based. The BREAK request should return another response than the original request. If not, we will not perform any additional scans. If one of the follow up request is identical to the original request, the webapp is most likely vulnerable to SQLi. 
 
 === SQLu
 
@@ -62,10 +62,13 @@ The new SQL tests:
 ORIG+1-1
 ORIG'+0+'0
 
-ORIG[0]'||'ORIG[1-END]
-ORIG[0]'+'ORIG[1-END]
+ORIG[0]' || 'ORIG[1-END]
+ORIG[0]' + 'ORIG[1-END]
 ORIG[0]' 'ORIG[1-END]
 /**/ORIG
 ----
 
 If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.
+
+== Other
+
