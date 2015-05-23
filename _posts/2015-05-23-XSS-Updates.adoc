@@ -1,6 +1,6 @@
 = XSS Updates
 
-At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Needles on a Worldwide Scale". Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name "WebSecLab" https://github.com/yahoo/webseclab. I tested Sentinel against all the testcases of WebSecLab, and found several testcases which get neither detected, nor tested correctly by Sentinel. Upon further testing, i decided to change the XSS payloads of Sentinel completely. The full list:
+At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Needles on a Worldwide Scale" http://www.slideshare.net/dimisec/badneedles. Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name "WebSecLab" https://github.com/yahoo/webseclab. I tested Sentinel against all the testcases of WebSecLab, and found several testcases which get neither detected, nor tested correctly by Sentinel. Upon further research, i decided to change the XSS payloads of Sentinel completely. The full list is now:
 
 [source]
 ----
@@ -19,14 +19,14 @@ At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Need
  9  ;alert(1)
 10  %3Balert(1)
           
-11  \\'\\"
+11  \'\"
 12  %5C%5C%27%5C%5C%22
         
 13  \u0022a
 14  %253Ca%2527%2522%253E
 ----
 
-This should give the penetration tester now all the tools he needs to reliably identify XSS. In future releases, i want to implement more reliable automated XSS detection. Until now, this is often a manual process (as inteded by using Sentinel). 
+This should give the penetration tester now all the tools he needs to reliably identify XSS. Sadly, 14 testcases are a lot to go trough. Maybe it is possible to shorten it in upcoming releases. Also in future releases, i want to implement more reliable automated XSS detection. Atm if the payloads are appearing decoded in the HTTP response, it will generate an INFO. But to realiably identify if it is exploitable, a lot more work is needed (which is part of the presentation mentioned above). 
 
 The log of the tests:
 [source]
