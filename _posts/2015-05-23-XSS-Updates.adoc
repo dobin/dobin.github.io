@@ -26,7 +26,7 @@ At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Need
 14  %253Ca%2527%2522%253E
 ----
 
-This should give the penetration tester now all the tools he needs to reliably identify XSS. Sadly, 14 testcases are a lot to go trough. Maybe it is possible to shorten it in upcoming releases. Also in future releases, i want to implement more reliable automated XSS detection. Atm if the payloads are appearing decoded in the HTTP response, it will generate an INFO. But to realiably identify if it is exploitable, a lot more work is needed (which is part of the presentation mentioned above). 
+This should give the penetration tester now all the tools he needs to reliably identify XSS. Sadly, 14 testcases are a lot to go trough. Maybe it is possible to shorten it in upcoming releases. Also in future releases, i want to implement more reliable automated XSS detection. Atm if the payloads are appearing decoded in the HTTP response, it will generate an INFO. But to realiably identify if it is exploitable, a lot more work is needed (which is part of the presentation mentioned above). I will release version 0.8 of Sentinel soon. 
 
 The log of the tests:
 [source]
