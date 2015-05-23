@@ -1,0 +1,4 @@
+= XSS Updates
+
+At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Needles on a Worldwide Scale". Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name "WebSecLab" https://github.com/yahoo/webseclab. I tested Sentinel against all the testcases of WebSecLab, and found several testcases which get neither detected, nor tested correctly by Sentinel. Upon further testing, i decided to change the XSS payloads of Sentinel completely. The full list:
+
