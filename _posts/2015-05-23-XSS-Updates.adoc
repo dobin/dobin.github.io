@@ -26,9 +26,9 @@ At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Need
 14  %253Ca%2527%2522%253E
 ----
 
+This should give the penetration tester now all the tools he needs to reliably identify XSS. In future releases, i want to implement more reliable automated XSS detection. Until now, this is often a manual process (as inteded by using Sentinel). 
+
 The log of the tests:
-
-
 [source]
 ----
 _fp: false positives: broken
