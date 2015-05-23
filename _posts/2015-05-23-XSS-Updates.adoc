@@ -2,3 +2,74 @@
 
 At OWASP AppSecEU 15, there's a presentation with the title of "Finding Bad Needles on a Worldwide Scale". Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name "WebSecLab" https://github.com/yahoo/webseclab. I tested Sentinel against all the testcases of WebSecLab, and found several testcases which get neither detected, nor tested correctly by Sentinel. Upon further testing, i decided to change the XSS payloads of Sentinel completely. The full list:
 
+[source]
+----
+ 1  <p>"
+ 2  %3Cp%3E%22
+           
+ 3  <p "=>
+ 4  %3Cp%20%22%3D%3E
+          
+ 5  ' =                 
+ 6  %27%20%3D           
+           
+ 7  " =                 
+ 8  %20%22%3D           
+          
+ 9  ;alert(1)
+10  %3Balert(1)
+          
+11  \\'\\"
+12  %5C%5C%27%5C%5C%22
+        
+13  \u0022a
+14  %253Ca%2527%2522%253E
+----
+
+The log of the tests:
+
+
+[source]
+----
+_fp: false positives: broken
+-> not part of sentinel
+
+doubq1: double encoding: broken
+-> fixed
+
+rs1: response splitting: broken
+-> wontfix (too specific to be useful)
+
+inredirect1_fp: accidently ok ;-)
+-> leave it like it is
+
+onmouseover: broken!
+-> fixed, added intagcheck again
+
+onmouseover_unquoted: broken
+-> wont fix (too specific, who does this?!)
+
+onmouseover_div_unquoted: broken
+-> wont fix (too specific, who does this?!)
+
+onclick1: broken
+-> wontfix (too complex to reliably identify. open your eyes)
+
+referer1: broken
+-> not fixed yet
+
+js3: broken
+-> wontfix (too complex to reliably identify. open your eyes)
+
+js4_dq: broken
+-> implemented
+
+js6_sq: broken
+-> fixed, added ' to tag testcase
+
+enc2: broken
+-> implemented
+
+backslash1: broken
+-> implemented
+----
