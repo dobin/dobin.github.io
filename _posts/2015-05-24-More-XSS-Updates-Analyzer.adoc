@@ -2,7 +2,51 @@
 
 I once had a feature in Sentinel, which beautified the HTML source code of HTTP responses (using jtidy). This can be very useful for the user, as it can be hard to navigate and read machine-generated HTML code (or just think of stripped newlines). Sadly it had an un-nice behaviour: it stripped ("beautified") partial XSS, like surplus single or double quotes in tags. I never thought about it much again.
 
-As described in the last post, the OWASP AppSecEU 15 presentation with the title of "Finding Bad Needles on a Worldwide Scale" http://www.slideshare.net/dimisec/badneedles discussed finding XSS vulnerabilities on a large scale. The author explained a techniq where he just let a HTTP parser parse the HTTP response. If a syntax error occured, the attack payload was breaking the context, which is a good indicator for a successful XSS attack. There i realized i already have all the things i need to implement this feature too.
+As described in the last post, the OWASP AppSecEU 15 presentation with the title of "Finding Bad Needles on a Worldwide Scale" http://www.slideshare.net/dimisec/badneedles discussed finding XSS vulnerabilities on a large scale. The author explained a techniq where he just let a HTTP parser parse the HTTP response. If a syntax error occured, the attack payload was breaking the context, which is a good indicator for a successful XSS attack. 
 
+When i've seen that jtidy has a log message listener (http://sourceforge.net/p/jtidy/code/HEAD/tree/trunk/jtidy/src/main/java/org/w3c/tidy/TidyMessageListener.java), i realized i already have all the things i need to implement this feature too.
+
+
+== Testing onmouseover
+
+Original: changeme4
+
+[source]
+----
+<H2>Update Your Preferences</H2><p>
+<FORM>
+Homepage: <input value="changeme4" name="in" size="40"><BR>
+<input type="submit" value="Change"></FORM>
+----
+
+
+[source]
+----
+23 - trimming empty <p>
+110 - InputStream: Doctype given is ""
+111 - InputStream: Document content looks like HTML 3.2
+----
+
+With the input vector of: changeme4Xssaa"+= (the + is whitespace, url encoded)
+
+[source]
+----
+<H2>Update Your Preferences</H2><p>
+<FORM>
+Homepage: <input value="changeme4Xssaa" =" name="in" size="40"><BR>
+<input type="submit" value="Change"></FORM>
+----
+
+[source]
+----
+23 - trimming empty <p>
+69 - <input> unexpected =, expected attribute name
+59 - <input> unexpected or duplicate quote mark
+110 - InputStream: Doctype given is ""
+111 - InputStream: Document content looks like HTML 3.2
+----
+
+
+== Sample output
 
 
