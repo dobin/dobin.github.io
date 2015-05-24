@@ -47,6 +47,8 @@ jtidy logs:
 111 - InputStream: Document content looks like HTML 3.2
 ----
 
+So jtidy was unhappy, and reported two additional errors (error code 69 and 59). 
+
 == Sample output
 
 image::http://www.dobin.ch/hubpress/sentinel-newxss.png[]
