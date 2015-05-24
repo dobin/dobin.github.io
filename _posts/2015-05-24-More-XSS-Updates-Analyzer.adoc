@@ -47,9 +47,12 @@ jtidy logs:
 111 - InputStream: Document content looks like HTML 3.2
 ----
 
-
 == Sample output
 
 image::http://www.dobin.ch/hubpress/sentinel-newxss.png[]
 
 
+== Implementation
+
+Commit: https://github.com/dobin/BurpSentinel/commit/51b91926f7bd5d10ba95b0d6278369c8a4d2a9de
+The code is ugly as fuck atm.
