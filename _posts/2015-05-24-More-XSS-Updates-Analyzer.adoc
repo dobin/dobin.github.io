@@ -9,7 +9,7 @@ When i've seen that jtidy has a log message listener (http://sourceforge.net/p/j
 
 == Testing onmouseover
 
-Original: changeme4
+Original: *changeme4*
 
 [source]
 ----
@@ -19,7 +19,7 @@ Homepage: <input value="changeme4" name="in" size="40"><BR>
 <input type="submit" value="Change"></FORM>
 ----
 
-
+Jtidy logs:
 [source]
 ----
 23 - trimming empty <p>
@@ -27,7 +27,7 @@ Homepage: <input value="changeme4" name="in" size="40"><BR>
 111 - InputStream: Document content looks like HTML 3.2
 ----
 
-With the input vector of: changeme4Xssaa"+= (the + is whitespace, url encoded)
+With the input vector of: *changeme4Xssaa"+=* (the + is whitespace, url encoded)
 
 [source]
 ----
@@ -37,6 +37,7 @@ Homepage: <input value="changeme4Xssaa" =" name="in" size="40"><BR>
 <input type="submit" value="Change"></FORM>
 ----
 
+jtidy logs:
 [source]
 ----
 23 - trimming empty <p>
@@ -48,5 +49,7 @@ Homepage: <input value="changeme4Xssaa" =" name="in" size="40"><BR>
 
 
 == Sample output
+
+image::http://www.dobin.ch/hubpress/sentinel-newxss.png[]
 
 
