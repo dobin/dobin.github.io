@@ -1,0 +1,8 @@
+= More XSS Updates (Analyzer)
+
+I once had a feature in Sentinel, which beautified the HTML source code of HTTP responses (using jtidy). This can be very useful for the user, as it can be hard to navigate and read machine-generated HTML code (or just think of stripped newlines). Sadly it had an un-nice behaviour: it stripped ("beautified") partial XSS, like surplus single or double quotes in tags. I never thought about it much again.
+
+As described in the last post, the OWASP AppSecEU 15 presentation with the title of "Finding Bad Needles on a Worldwide Scale" http://www.slideshare.net/dimisec/badneedles discussed finding XSS vulnerabilities on a large scale. The author explained a techniq where he just let a HTTP parser parse the HTTP response. If a syntax error occured, the attack payload was breaking the context, which is a good indicator for a successful XSS attack. There i realized i already have all the things i need to implement this feature too.
+
+
+
