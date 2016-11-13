@@ -1,0 +1,13 @@
+= BurpSentinel improvements outlook
+
+Based on the feedback of BurpSentinel users, i'll continue to improve the capabilities and UI of BurpSentinel. I've realized that people dont use it completely as i've intended it to. It seems that users perform a scan of a request, and look for indicators of BurpSentinel concerning indentified vulnerabilities. But originally, i've intended to show all necessary information so that the pentester is able to figure out on his own if there is a vulnerability or not (e.g. based on the response size, number of tags in the response etc.). This seems not be be the primary need of a pentester. Therefore in the last few commits, I reworked the output of BurpSentinel so that it shows vulnerabilities more clearly, and also greatly enhanced the capability to realiably identify vulnerabilities in an automatic fashion. 
+
+This resulted in a muss less cluttered interfaec. I try to show only necessary information. Also I removed several features which were not as useful as I thought, notably Authentication attacks (with Session)
+and the Categorizer (which will be back in a later stage). 
+
+There were also some new features by Burp itself. Particulary interesting is the response diffing feature (as described in http://releases.portswigger.net/2016/11/1710.html). BurpSentinel already had a similar feature, but the analyzeResponseVariations() is more powerful and consistent. BurpSentinel now uses this API, and therefore requires at least Burp 1.7.10. The other development is the Backslash Powered scanner, as described in http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html. 
+
+
+In the past few years, the automated
+
+
