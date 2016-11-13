@@ -1,4 +1,4 @@
-= More XSS Updates (Analyzer)
+= BurpSentinel More XSS Updates (Analyzer)
 
 I once had a feature in Sentinel, which beautified the HTML source code of HTTP responses (using jtidy). This can be very useful for the user, as it can be hard to navigate and read machine-generated HTML code (or just think of stripped newlines). Sadly it had an un-nice behaviour: it stripped ("beautified") partial XSS, like surplus single or double quotes in tags. I never thought about it much again.
 
