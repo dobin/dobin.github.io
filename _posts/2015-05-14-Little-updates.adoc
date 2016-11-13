@@ -1,3 +1,0 @@
-= Little updates
-
-I finally had time to work on Sentinel again. I fixed several little anoying bugs, and greatly improved the "Other" attack module (see previous post), and several attack lists. Also some performance improvements. Updates binary, but no new release.
