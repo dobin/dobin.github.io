@@ -1,13 +1,36 @@
 = BurpSentinel improvements outlook
 
-Based on the feedback of BurpSentinel users, i'll continue to improve the capabilities and UI of BurpSentinel. I've realized that people dont use it completely as i've intended it to. It seems that users perform a scan of a request, and look for indicators of BurpSentinel concerning indentified vulnerabilities. But originally, i've intended to show all necessary information so that the pentester is able to figure out on his own if there is a vulnerability or not (e.g. based on the response size, number of tags in the response etc.). This seems not be be the primary need of a pentester. Therefore in the last few commits, I reworked the output of BurpSentinel so that it shows vulnerabilities more clearly, and also greatly enhanced the capability to realiably identify vulnerabilities in an automatic fashion. 
+Based on the feedback of BurpSentinel users, i'll continue to improve the capabilities and UI of BurpSentinel. I've realized that people dont use it completely as i've intended it to. It seems that users perform a scan of a request, and look for indicators of BurpSentinel concerning indentified vulnerabilities. But originally, i've intended to show all necessary information so that the pentester is able to figure out on his own if there is a vulnerability or not (e.g. based on the response size, number of tags in the response etc.). This takes a lot of time and know-how, and seems not be be the primary need of a pentester. Therefore in the last few commits, I reworked the output of BurpSentinel so that it shows vulnerabilities more clearly, and also greatly enhanced the capability to realiably identify vulnerabilities in an automatic fashion. 
 
-This resulted in a muss less cluttered interfaec. I try to show only necessary information. Also I removed several features which were not as useful as I thought, notably Authentication attacks (with Session)
-and the Categorizer (which will be back in a later stage). 
+This resulted in a muss less cluttered interface. I try to show only necessary information. Also I removed several features which were not as useful as I thought, notably Authentication attacks (with Session)
+and the Categorizer (which will be back in a later stage). The "Interesting" column is also gone. Also the default SQL injection scanner (the idempotent SQL injection scanner is now standard). I hope that people are not anymore overwhelmed by the UI as before.  
 
-There were also some new features by Burp itself. Particulary interesting is the response diffing feature (as described in http://releases.portswigger.net/2016/11/1710.html). BurpSentinel already had a similar feature, but the analyzeResponseVariations() is more powerful and consistent. BurpSentinel now uses this API, and therefore requires at least Burp 1.7.10. The other development is the Backslash Powered scanner, as described in http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html. 
+There were also some new features by Burp/Powerswigger itself. Particulary interesting is the response diffing feature (as described in http://releases.portswigger.net/2016/11/1710.html). BurpSentinel already had a similar feature, but the analyzeResponseVariations() is more powerful and consistent. BurpSentinel now uses this API, and therefore requires at least Burp 1.7.10. The other development is the Backslash Powered scanner, as described in http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html. This is a very novel and interesting approach to find vulenrabilities. Additionally, the Burp Active Scan was also constantly improved by Burp. 
 
+With the new changes to BurpSentinel as mentioned above, it comes closer and closer to fully automated scanners integrated in Burp. I'm in the process on comparing BurpSentinel with both ActiveScan and Backslash powered scanning (BPS). So far i can conclude that ActiveScan got very powerful, especially together with BPS. Nevertheless BurpSentinel still finds vulnerabilities which are not detected by ActiveScan and BPS. I will release a detailed comparison in the future. 
 
-In the past few years, the automated
+So, where will BurpSentinel go from here? In my opinion it still fits his niche. The main issue for me as pentester is: What if ActiveScan does not find vulnerabilities? Is the application secure, or is the scanner bad? With BurpSentinel, I also see failed tests, and am able to identify why the tests failed, and which tests. I can improve my manual hacking by looking at the output of these failed test, like: 
+- How are parameters encoded? Where do they appear?
+- How does the page behave? 
+- Is the request I tested realiably test worthy, or produces erratic results?
+- What other tests can or should I perform?
 
+Additionally, BurpSentinel may be a good alternative to Burp Professional. People which use the free version of Burp dont have ActiveScan or BPS, so BurpSentinel is usefull here. 
 
+Lets discuss the individual scans of BurpSentinel.
+
+## XSS Scanner
+
+This one works pretty good for reflected XSS, and quite OK for stored XSS. It should now produce less false positives. Pretty straight-forward, no need for great improvements. 
+
+## SQL Scanner
+
+Still working pretty well, and is probably the main feature of BurpSentinel. The idempotent SQL injection detection is doing good work, but still has trouble in highly dynamic websites. I will put some work into it, to provide less false-negatives, but still keeping false-positives low. Topic of research and hands on tests. 
+
+## Command injection
+
+Before it was in Attack "other". Changed it into a dedicated attack. Not as powerfull as other tools, but can still find some command injections. Work in progress.
+
+## Template injection
+
+A new attack. Very similar to XSS scanner. Will be based on the research of Portswigger: http://blog.portswigger.net/2015/08/server-side-template-injection.html.
