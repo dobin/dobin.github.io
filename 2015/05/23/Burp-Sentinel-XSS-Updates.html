@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>BurpSentinel XSS Updates</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://dobin.github.io/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//dobin.github.io/themes/casper/assets/css/screen.css?v=1479039477507" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://dobin.github.io/2015/05/23/Burp-Sentinel-XSS-Updates.html" />
+    <meta name="referrer" content="origin" />
+    
+    <meta property="og:site_name" content="Dobin Github" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BurpSentinel XSS Updates" />
+    <meta property="og:description" content="At OWASP AppSecEU 15, there&amp;#8217;s a presentation with the title of &quot;Finding Bad Needles on a Worldwide Scale&quot; http://www.slideshare.net/dimisec/badneedles. Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name &quot;WebSecLab&quot; https:" />
+    <meta property="og:url" content="https://dobin.github.io/2015/05/23/Burp-Sentinel-XSS-Updates.html" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="BurpSentinel XSS Updates" />
+    <meta name="twitter:description" content="At OWASP AppSecEU 15, there&amp;#8217;s a presentation with the title of &quot;Finding Bad Needles on a Worldwide Scale&quot; http://www.slideshare.net/dimisec/badneedles. Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name &quot;WebSecLab&quot; https:" />
+    <meta name="twitter:url" content="https://dobin.github.io/2015/05/23/Burp-Sentinel-XSS-Updates.html" />
+    
+    <script type="application/ld+json">
+null
+    </script>
+
+    <meta name="generator" content="HubPress" />
+    <link rel="alternate" type="application/rss+xml" title="Dobin Github" href="https://dobin.github.io/rss/" />
+</head>
+<body class="post-template nav-closed">
+
+    
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">BurpSentinel XSS Updates</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2015-05-23">23 May 2015</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div class="paragraph">
+<p>At OWASP AppSecEU 15, there&#8217;s a presentation with the title of "Finding Bad Needles on a Worldwide Scale" <a href="http://www.slideshare.net/dimisec/badneedles" class="bare">http://www.slideshare.net/dimisec/badneedles</a>. Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name "WebSecLab" <a href="https://github.com/yahoo/webseclab" class="bare">https://github.com/yahoo/webseclab</a>. I tested Sentinel against all the testcases of WebSecLab, and found several testcases which get neither detected, nor tested correctly by Sentinel. Upon further research, i decided to change the XSS payloads of Sentinel completely. The full list is now:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code> 1  &lt;p&gt;"
+ 2  %3Cp%3E%22
+
+ 3  &lt;p "=&gt;
+ 4  %3Cp%20%22%3D%3E
+
+ 5  ' =
+ 6  %27%20%3D
+
+ 7  " =
+ 8  %20%22%3D
+
+ 9  ;alert(1)
+10  %3Balert(1)
+
+11  \'\"
+12  %5C%5C%27%5C%5C%22
+
+13  \u0022a
+14  %253Ca%2527%2522%253E</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This should give the penetration tester now all the tools he needs to reliably identify XSS. Sadly, 14 testcases are a lot to go trough. Maybe it is possible to shorten it in upcoming releases. Also in future releases, i want to implement more reliable automated XSS detection. Atm if the payloads are appearing decoded in the HTTP response, it will generate an INFO. But to realiably identify if it is exploitable, a lot more work is needed (which is part of the presentation mentioned above). I will release version 0.8 of Sentinel soon.</p>
+</div>
+<div class="paragraph">
+<p>The log of the tests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>_fp: false positives: broken
+-&gt; not part of sentinel
+
+doubq1: double encoding: broken
+-&gt; fixed
+
+rs1: response splitting: broken
+-&gt; wontfix (too specific to be useful)
+
+inredirect1_fp: accidently ok ;-)
+-&gt; leave it like it is
+
+onmouseover: broken!
+-&gt; fixed, added intagcheck again
+
+onmouseover_unquoted: broken
+-&gt; wont fix (too specific, who does this?!)
+
+onmouseover_div_unquoted: broken
+-&gt; wont fix (too specific, who does this?!)
+
+onclick1: broken
+-&gt; wontfix (too complex to reliably identify. open your eyes)
+
+referer1: broken
+-&gt; not fixed yet
+
+js3: broken
+-&gt; wontfix (too complex to reliably identify. open your eyes)
+
+js4_dq: broken
+-&gt; implemented
+
+js6_sq: broken
+-&gt; fixed, added ' to tag testcase
+
+enc2: broken
+-&gt; implemented
+
+backslash1: broken
+-&gt; implemented</code></pre>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="https://dobin.github.io/author/dobin/" style="background-image: url(https://avatars.githubusercontent.com/u/3250886?v&#x3D;3)"><span class="hidden">Dobin Rutishauser's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="https://dobin.github.io/author/dobin/">Dobin Rutishauser</a></h4>
+
+                    <p>Read <a href="https://dobin.github.io/author/dobin/">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Zurich</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=BurpSentinel%20XSS%20Updates&amp;url=https://dobin.github.io/2015/05/23/Burp-Sentinel-XSS-Updates.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://dobin.github.io/2015/05/23/Burp-Sentinel-XSS-Updates.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://dobin.github.io/2015/05/23/Burp-Sentinel-XSS-Updates.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+</aside>
+
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="https://dobin.github.io">Dobin Github</a> &copy; 2016</section>
+            <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();
+      </script>
+
+    <script type="text/javascript" src="//dobin.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1479039477507"></script>
+    <script type="text/javascript" src="//dobin.github.io/themes/casper/assets/js/index.js?v=1479039477507"></script>
+
+</body>
+</html>
