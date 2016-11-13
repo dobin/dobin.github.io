@@ -1,4 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Dobin Github]]></title><description><![CDATA[A blog about my projects]]></description><link>https://dobin.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 13 Nov 2016 12:19:25 GMT</lastBuildDate><atom:link href="https://dobin.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[BurpSentinel More XSS Updates (Analyzer)]]></title><description><![CDATA[<div id="preamble">
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Dobin Github]]></title><description><![CDATA[A blog about my projects]]></description><link>https://dobin.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 13 Nov 2016 13:05:42 GMT</lastBuildDate><atom:link href="https://dobin.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[BurpSentinel improvements outlook]]></title><description><![CDATA[<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Based on the feedback of BurpSentinel users, i&#8217;ll continue to improve the capabilities and UI of BurpSentinel. I&#8217;ve realized that people dont use it completely as i&#8217;ve intended it to. It seems that users perform a scan of a request, and look for indicators of BurpSentinel concerning indentified vulnerabilities. But originally, i&#8217;ve intended to show all necessary information so that the pentester is able to figure out on his own if there is a vulnerability or not (e.g. based on the response size, number of tags in the response etc.). This takes a lot of time and know-how, and seems not be be the primary need of a pentester. Therefore in the last few commits, I reworked the output of BurpSentinel so that it shows vulnerabilities more clearly, and also greatly enhanced the capability to realiably identify vulnerabilities in an automatic fashion.</p>
+</div>
+<div class="paragraph">
+<p>This resulted in a muss less cluttered interface. I try to show only necessary information. Also I removed several features which were not as useful as I thought, notably Authentication attacks (with Session)
+and the Categorizer (which will be back in a later stage). The "Interesting" column is also gone. Also the default SQL injection scanner (the idempotent SQL injection scanner is now standard). I hope that people are not anymore overwhelmed by the UI as before.</p>
+</div>
+<div class="paragraph">
+<p>There were also some new features by Burp/Powerswigger itself. Particulary interesting is the response diffing feature (as described in <a href="http://releases.portswigger.net/2016/11/1710.html" class="bare">http://releases.portswigger.net/2016/11/1710.html</a>). BurpSentinel already had a similar feature, but the analyzeResponseVariations() is more powerful and consistent. BurpSentinel now uses this API, and therefore requires at least Burp 1.7.10. The other development is the Backslash Powered scanner, as described in <a href="http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html" class="bare">http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html</a>. This is a very novel and interesting approach to find vulenrabilities. Additionally, the Burp Active Scan was also constantly improved by Burp.</p>
+</div>
+<div class="paragraph">
+<p>With the new changes to BurpSentinel as mentioned above, it comes closer and closer to fully automated scanners integrated in Burp. I&#8217;m in the process on comparing BurpSentinel with both ActiveScan and Backslash powered scanning (BPS). So far i can conclude that ActiveScan got very powerful, especially together with BPS. Nevertheless BurpSentinel still finds vulnerabilities which are not detected by ActiveScan and BPS. I will release a detailed comparison in the future.</p>
+</div>
+<div class="paragraph">
+<p>So, where will BurpSentinel go from here? In my opinion it still fits his niche. The main issue for me as pentester is: What if ActiveScan does not find vulnerabilities? Is the application secure, or is the scanner bad? With BurpSentinel, I also see failed tests, and am able to identify why the tests failed, and which tests. I can improve my manual hacking by looking at the output of these failed test, like:
+- How are parameters encoded? Where do they appear?
+- How does the page behave?
+- Is the request I tested realiably test worthy, or produces erratic results?
+- What other tests can or should I perform?</p>
+</div>
+<div class="paragraph">
+<p>Additionally, BurpSentinel may be a good alternative to Burp Professional. People which use the free version of Burp dont have ActiveScan or BPS, so BurpSentinel is usefull here.</p>
+</div>
+<div class="paragraph">
+<p>Lets discuss the individual scans of BurpSentinel.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_xss_scanner">XSS Scanner</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This one works pretty good for reflected XSS, and quite OK for stored XSS. It should now produce less false positives. Pretty straight-forward, no need for great improvements.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sql_scanner">SQL Scanner</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Still working pretty well, and is probably the main feature of BurpSentinel. The idempotent SQL injection detection is doing good work, but still has trouble in highly dynamic websites. I will put some work into it, to provide less false-negatives, but still keeping false-positives low. Topic of research and hands on tests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_command_injection">Command injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before it was in Attack "other". Changed it into a dedicated attack. Not as powerfull as other tools, but can still find some command injections. Work in progress.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_template_injection">Template injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A new attack. Very similar to XSS scanner. Will be based on the research of Portswigger: <a href="http://blog.portswigger.net/2015/08/server-side-template-injection.html" class="bare">http://blog.portswigger.net/2015/08/server-side-template-injection.html</a>.</p>
+</div>
+</div>
+</div>]]></description><link>https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html</link><guid isPermaLink="true">https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html</guid><dc:creator><![CDATA[Dobin Rutishauser]]></dc:creator><pubDate>Sun, 13 Nov 2016 00:00:00 GMT</pubDate></item><item><title><![CDATA[BurpSentinel More XSS Updates (Analyzer)]]></title><description><![CDATA[<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>I once had a feature in Sentinel, which beautified the HTML source code of HTTP responses (using jtidy). This can be very useful for the user, as it can be hard to navigate and read machine-generated HTML code (or just think of stripped newlines). Sadly it had an un-nice behaviour: it stripped ("beautified") partial XSS, like surplus single or double quotes in tags. I never thought about it much again.</p>
