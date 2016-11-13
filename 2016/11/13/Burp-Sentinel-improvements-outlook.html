@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>BurpSentinel improvements outlook</title>
+    <meta name="description" content="" />
+
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="https://dobin.github.io/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="//dobin.github.io/themes/casper/assets/css/screen.css?v=1479042342812" />
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400" />
+
+    <link rel="canonical" href="https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html" />
+    <meta name="referrer" content="origin" />
+    
+    <meta property="og:site_name" content="Dobin Github" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BurpSentinel improvements outlook" />
+    <meta property="og:description" content="Based on the feedback of BurpSentinel users, i&amp;#8217;ll continue to improve the capabilities and UI of BurpSentinel. I&amp;#8217;ve realized that people dont use it completely as i&amp;#8217;ve intended it to. It seems that users perform a scan of a request, and look for indicators" />
+    <meta property="og:url" content="https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="BurpSentinel improvements outlook" />
+    <meta name="twitter:description" content="Based on the feedback of BurpSentinel users, i&amp;#8217;ll continue to improve the capabilities and UI of BurpSentinel. I&amp;#8217;ve realized that people dont use it completely as i&amp;#8217;ve intended it to. It seems that users perform a scan of a request, and look for indicators" />
+    <meta name="twitter:url" content="https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html" />
+    
+    <script type="application/ld+json">
+null
+    </script>
+
+    <meta name="generator" content="HubPress" />
+    <link rel="alternate" type="application/rss+xml" title="Dobin Github" href="https://dobin.github.io/rss/" />
+</head>
+<body class="post-template nav-closed">
+
+    
+
+    <div class="site-wrapper">
+
+        
+
+
+<header class="main-header post-head no-cover">
+    <nav class="main-nav  clearfix">
+        
+    </nav>
+</header>
+
+<main class="content" role="main">
+    <article class="post">
+
+        <header class="post-header">
+            <h1 class="post-title">BurpSentinel improvements outlook</h1>
+            <section class="post-meta">
+                <time class="post-date" datetime="2016-11-13">13 November 2016</time> 
+            </section>
+        </header>
+
+        <section class="post-content">
+            <div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Based on the feedback of BurpSentinel users, i&#8217;ll continue to improve the capabilities and UI of BurpSentinel. I&#8217;ve realized that people dont use it completely as i&#8217;ve intended it to. It seems that users perform a scan of a request, and look for indicators of BurpSentinel concerning indentified vulnerabilities. But originally, i&#8217;ve intended to show all necessary information so that the pentester is able to figure out on his own if there is a vulnerability or not (e.g. based on the response size, number of tags in the response etc.). This takes a lot of time and know-how, and seems not be be the primary need of a pentester. Therefore in the last few commits, I reworked the output of BurpSentinel so that it shows vulnerabilities more clearly, and also greatly enhanced the capability to realiably identify vulnerabilities in an automatic fashion.</p>
+</div>
+<div class="paragraph">
+<p>This resulted in a muss less cluttered interface. I try to show only necessary information. Also I removed several features which were not as useful as I thought, notably Authentication attacks (with Session)
+and the Categorizer (which will be back in a later stage). The "Interesting" column is also gone. Also the default SQL injection scanner (the idempotent SQL injection scanner is now standard). I hope that people are not anymore overwhelmed by the UI as before.</p>
+</div>
+<div class="paragraph">
+<p>There were also some new features by Burp/Powerswigger itself. Particulary interesting is the response diffing feature (as described in <a href="http://releases.portswigger.net/2016/11/1710.html" class="bare">http://releases.portswigger.net/2016/11/1710.html</a>). BurpSentinel already had a similar feature, but the analyzeResponseVariations() is more powerful and consistent. BurpSentinel now uses this API, and therefore requires at least Burp 1.7.10. The other development is the Backslash Powered scanner, as described in <a href="http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html" class="bare">http://blog.portswigger.net/2016/11/backslash-powered-scanning-hunting.html</a>. This is a very novel and interesting approach to find vulenrabilities. Additionally, the Burp Active Scan was also constantly improved by Burp.</p>
+</div>
+<div class="paragraph">
+<p>With the new changes to BurpSentinel as mentioned above, it comes closer and closer to fully automated scanners integrated in Burp. I&#8217;m in the process on comparing BurpSentinel with both ActiveScan and Backslash powered scanning (BPS). So far i can conclude that ActiveScan got very powerful, especially together with BPS. Nevertheless BurpSentinel still finds vulnerabilities which are not detected by ActiveScan and BPS. I will release a detailed comparison in the future.</p>
+</div>
+<div class="paragraph">
+<p>So, where will BurpSentinel go from here? In my opinion it still fits his niche. The main issue for me as pentester is: What if ActiveScan does not find vulnerabilities? Is the application secure, or is the scanner bad? With BurpSentinel, I also see failed tests, and am able to identify why the tests failed, and which tests. I can improve my manual hacking by looking at the output of these failed test, like:
+- How are parameters encoded? Where do they appear?
+- How does the page behave?
+- Is the request I tested realiably test worthy, or produces erratic results?
+- What other tests can or should I perform?</p>
+</div>
+<div class="paragraph">
+<p>Additionally, BurpSentinel may be a good alternative to Burp Professional. People which use the free version of Burp dont have ActiveScan or BPS, so BurpSentinel is usefull here.</p>
+</div>
+<div class="paragraph">
+<p>Lets discuss the individual scans of BurpSentinel.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_xss_scanner">XSS Scanner</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This one works pretty good for reflected XSS, and quite OK for stored XSS. It should now produce less false positives. Pretty straight-forward, no need for great improvements.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sql_scanner">SQL Scanner</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Still working pretty well, and is probably the main feature of BurpSentinel. The idempotent SQL injection detection is doing good work, but still has trouble in highly dynamic websites. I will put some work into it, to provide less false-negatives, but still keeping false-positives low. Topic of research and hands on tests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_command_injection">Command injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before it was in Attack "other". Changed it into a dedicated attack. Not as powerfull as other tools, but can still find some command injections. Work in progress.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_template_injection">Template injection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A new attack. Very similar to XSS scanner. Will be based on the research of Portswigger: <a href="http://blog.portswigger.net/2015/08/server-side-template-injection.html" class="bare">http://blog.portswigger.net/2015/08/server-side-template-injection.html</a>.</p>
+</div>
+</div>
+</div>
+        </section>
+
+        <footer class="post-footer">
+
+
+            <figure class="author-image">
+                <a class="img" href="https://dobin.github.io/author/dobin/" style="background-image: url(https://avatars.githubusercontent.com/u/3250886?v&#x3D;3)"><span class="hidden">Dobin Rutishauser's Picture</span></a>
+            </figure>
+
+            <section class="author">
+                <h4><a href="https://dobin.github.io/author/dobin/">Dobin Rutishauser</a></h4>
+
+                    <p>Read <a href="https://dobin.github.io/author/dobin/">more posts</a> by this author.</p>
+                <div class="author-meta">
+                    <span class="author-location icon-location">Zurich</span>
+                    
+                </div>
+            </section>
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=BurpSentinel%20improvements%20outlook&amp;url=https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html"
+                    onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html"
+                    onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=https://dobin.github.io/2016/11/13/Burp-Sentinel-improvements-outlook.html"
+                   onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+        </footer>
+
+
+    </article>
+
+</main>
+
+<aside class="read-next">
+</aside>
+
+
+
+        <footer class="site-footer clearfix">
+            <section class="copyright"><a href="https://dobin.github.io">Dobin Github</a> &copy; 2016</section>
+            <section class="poweredby">Proudly published with <a href="http://hubpress.io">HubPress</a></section>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js?v="></script> <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js?v="></script> 
+      <script type="text/javascript">
+        jQuery( document ).ready(function() {
+          // change date with ago
+          jQuery('ago.ago').each(function(){
+            var element = jQuery(this).parent();
+            element.html( moment(element.text()).fromNow());
+          });
+        });
+
+        hljs.initHighlightingOnLoad();
+      </script>
+
+    <script type="text/javascript" src="//dobin.github.io/themes/casper/assets/js/jquery.fitvids.js?v=1479042342812"></script>
+    <script type="text/javascript" src="//dobin.github.io/themes/casper/assets/js/index.js?v=1479042342812"></script>
+
+</body>
+</html>
