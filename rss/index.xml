@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Dobin Github]]></title><description><![CDATA[A blog about BurpSentinel and Timelime]]></description><link>https://dobin.github.io</link><generator>RSS for Node</generator><lastBuildDate>Sun, 13 Nov 2016 12:16:28 GMT</lastBuildDate><atom:link href="https://dobin.github.io/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[More XSS Updates (Analyzer)]]></title><description><![CDATA[<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>I once had a feature in Sentinel, which beautified the HTML source code of HTTP responses (using jtidy). This can be very useful for the user, as it can be hard to navigate and read machine-generated HTML code (or just think of stripped newlines). Sadly it had an un-nice behaviour: it stripped ("beautified") partial XSS, like surplus single or double quotes in tags. I never thought about it much again.</p>
+</div>
+<div class="paragraph">
+<p>As described in the last post, the OWASP AppSecEU 15 presentation with the title of "Finding Bad Needles on a Worldwide Scale" <a href="http://www.slideshare.net/dimisec/badneedles" class="bare">http://www.slideshare.net/dimisec/badneedles</a> discussed finding XSS vulnerabilities on a large scale. The author explained a techniq where he just let a HTTP parser parse the HTTP response. If a syntax error occured, the attack payload was breaking the context, which is a good indicator for a successful XSS attack.</p>
+</div>
+<div class="paragraph">
+<p>When i&#8217;ve seen that jtidy has a log message listener (<a href="http://sourceforge.net/p/jtidy/code/HEAD/tree/trunk/jtidy/src/main/java/org/w3c/tidy/TidyMessageListener.java" class="bare">http://sourceforge.net/p/jtidy/code/HEAD/tree/trunk/jtidy/src/main/java/org/w3c/tidy/TidyMessageListener.java</a>), i realized i already have all the things i need to implement this feature too.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_onmouseover">Testing onmouseover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Original: <strong>changeme4</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;H2&gt;Update Your Preferences&lt;/H2&gt;&lt;p&gt;
+&lt;FORM&gt;
+Homepage: &lt;input value="changeme4" name="in" size="40"&gt;&lt;BR&gt;
+&lt;input type="submit" value="Change"&gt;&lt;/FORM&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Jtidy logs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>23 - trimming empty &lt;p&gt;
+110 - InputStream: Doctype given is ""
+111 - InputStream: Document content looks like HTML 3.2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the input vector of: <strong>changeme4Xssaa"+=</strong> (the + is whitespace, url encoded)</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>&lt;H2&gt;Update Your Preferences&lt;/H2&gt;&lt;p&gt;
+&lt;FORM&gt;
+Homepage: &lt;input value="changeme4Xssaa" =" name="in" size="40"&gt;&lt;BR&gt;
+&lt;input type="submit" value="Change"&gt;&lt;/FORM&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>jtidy logs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>23 - trimming empty &lt;p&gt;
+69 - &lt;input&gt; unexpected =, expected attribute name
+59 - &lt;input&gt; unexpected or duplicate quote mark
+110 - InputStream: Doctype given is ""
+111 - InputStream: Document content looks like HTML 3.2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So jtidy was unhappy, and reported two additional errors (error code 69 and 59).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sample_output">Sample output</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="http://www.dobin.ch/hubpress/sentinel-newxss.png" alt="sentinel newxss.png">
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation">Implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Commit: <a href="https://github.com/dobin/BurpSentinel/commit/51b91926f7bd5d10ba95b0d6278369c8a4d2a9de" class="bare">https://github.com/dobin/BurpSentinel/commit/51b91926f7bd5d10ba95b0d6278369c8a4d2a9de</a>
+The code is ugly as fuck atm.</p>
+</div>
+<div class="paragraph">
+<p>Also, there&#8217;s just a HTML parser, but no JavaScript parser.</p>
+</div>
+</div>
+</div>]]></description><link>https://dobin.github.io/2015/05/24/More-XSS-Updates-Analyzer.html</link><guid isPermaLink="true">https://dobin.github.io/2015/05/24/More-XSS-Updates-Analyzer.html</guid><dc:creator><![CDATA[Dobin Rutishauser]]></dc:creator><pubDate>Sun, 24 May 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[XSS Updates]]></title><description><![CDATA[<div class="paragraph">
+<p>At OWASP AppSecEU 15, there&#8217;s a presentation with the title of "Finding Bad Needles on a Worldwide Scale" <a href="http://www.slideshare.net/dimisec/badneedles" class="bare">http://www.slideshare.net/dimisec/badneedles</a>. Yahoo is trying automated XSS discovery with various tools. Anyway, Dmitry Savintsev created a test website similar to SentinelTestBed, with the name "WebSecLab" <a href="https://github.com/yahoo/webseclab" class="bare">https://github.com/yahoo/webseclab</a>. I tested Sentinel against all the testcases of WebSecLab, and found several testcases which get neither detected, nor tested correctly by Sentinel. Upon further research, i decided to change the XSS payloads of Sentinel completely. The full list is now:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code> 1  &lt;p&gt;"
+ 2  %3Cp%3E%22
+
+ 3  &lt;p "=&gt;
+ 4  %3Cp%20%22%3D%3E
+
+ 5  ' =
+ 6  %27%20%3D
+
+ 7  " =
+ 8  %20%22%3D
+
+ 9  ;alert(1)
+10  %3Balert(1)
+
+11  \'\"
+12  %5C%5C%27%5C%5C%22
+
+13  \u0022a
+14  %253Ca%2527%2522%253E</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This should give the penetration tester now all the tools he needs to reliably identify XSS. Sadly, 14 testcases are a lot to go trough. Maybe it is possible to shorten it in upcoming releases. Also in future releases, i want to implement more reliable automated XSS detection. Atm if the payloads are appearing decoded in the HTTP response, it will generate an INFO. But to realiably identify if it is exploitable, a lot more work is needed (which is part of the presentation mentioned above). I will release version 0.8 of Sentinel soon.</p>
+</div>
+<div class="paragraph">
+<p>The log of the tests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>_fp: false positives: broken
+-&gt; not part of sentinel
+
+doubq1: double encoding: broken
+-&gt; fixed
+
+rs1: response splitting: broken
+-&gt; wontfix (too specific to be useful)
+
+inredirect1_fp: accidently ok ;-)
+-&gt; leave it like it is
+
+onmouseover: broken!
+-&gt; fixed, added intagcheck again
+
+onmouseover_unquoted: broken
+-&gt; wont fix (too specific, who does this?!)
+
+onmouseover_div_unquoted: broken
+-&gt; wont fix (too specific, who does this?!)
+
+onclick1: broken
+-&gt; wontfix (too complex to reliably identify. open your eyes)
+
+referer1: broken
+-&gt; not fixed yet
+
+js3: broken
+-&gt; wontfix (too complex to reliably identify. open your eyes)
+
+js4_dq: broken
+-&gt; implemented
+
+js6_sq: broken
+-&gt; fixed, added ' to tag testcase
+
+enc2: broken
+-&gt; implemented
+
+backslash1: broken
+-&gt; implemented</code></pre>
+</div>
+</div>]]></description><link>https://dobin.github.io/2015/05/23/XSS-Updates.html</link><guid isPermaLink="true">https://dobin.github.io/2015/05/23/XSS-Updates.html</guid><dc:creator><![CDATA[Dobin Rutishauser]]></dc:creator><pubDate>Sat, 23 May 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Little updates]]></title><description><![CDATA[<div class="paragraph">
+<p>I finally had time to work on Sentinel again. I fixed several little anoying bugs, and greatly improved the "Other" attack module (see previous post), and several attack lists. Also some performance improvements. Updates binary, but no new release.</p>
+</div>]]></description><link>https://dobin.github.io/2015/05/14/Little-updates.html</link><guid isPermaLink="true">https://dobin.github.io/2015/05/14/Little-updates.html</guid><dc:creator><![CDATA[Dobin Rutishauser]]></dc:creator><pubDate>Thu, 14 May 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[BurpSentinel Payloads]]></title><description><![CDATA[<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Based on my presentation on BSidesVienna 2014: <a href="http://www.slideshare.net/nibod/bsides-viennasentinel-v04" class="bare">http://www.slideshare.net/nibod/bsides-viennasentinel-v04</a>
+A short description of the payloads used by BurpSentinel. The payloads are developed to be as efficient as possible. There should be no unecessary payloads.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_xss">XSS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If the web app returns &lt;p&gt;", it is vulnerable to XSS.</p>
+</div>
+<div class="paragraph">
+<p>For tag based injection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>%3Cp%3E%22
+&lt;p&gt;"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).</p>
+</div>
+<div class="paragraph">
+<p>For tag value based injection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>%22%3D
+"=</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both of the above will be sent like written above. The 2nd, unencoded version will be not exploitable in real life if the parameter is in GET (HTTP URL).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sql">SQL</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The SQL tests are positive-based. The BREAK request should return another response than the original request. If not, we will not perform any additional scans. If one of the follow up request is identical to the original request, the webapp is most likely vulnerable to SQLi.</p>
+</div>
+<div class="sect2">
+<h3 id="_sqlu">SQLu</h3>
+<div class="paragraph">
+<p>The old SQL tests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>'BREAK"
+
+OR 41=41
+' OR '41'='41
+" OR "41"="41
+
+/**/
+
+) OR (41=41
+') OR ('41'='41
+") OR ("41"="41"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sqls">SQLs</h3>
+<div class="paragraph">
+<p>The new SQL tests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>'BREAK"
+
+ORIG+1-1
+ORIG'+0+'0
+
+ORIG[0]' || 'ORIG[1-END]
+ORIG[0]' + 'ORIG[1-END]
+ORIG[0]' 'ORIG[1-END]
+/**/ORIG</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the attack vector is in POST (HTTP body), try each of the above with and without URL encoding. For GET (HTTP URL), just use URL encoding.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other">Other</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The tests include command execution tests, and also shellshock. Additionally it will test null bytes (%00) and tries file inclusion positive test.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code>.\
+./
+() { :;}; sleep 10
+%00
+;sleep 10
+\" ;sleep 10
+';sleep 10
+|sleep 10
+&amp; ping -c 10 127.0.0.1
+\" &amp; ping -c 10 127.0.0.1
+' &amp; ping -c 10 127.0.0.1</code></pre>
+</div>
+</div>
+</div>
+</div>]]></description><link>https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html</link><guid isPermaLink="true">https://dobin.github.io/2015/05/09/BurpSentinel-Payloads.html</guid><dc:creator><![CDATA[Dobin Rutishauser]]></dc:creator><pubDate>Sat, 09 May 2015 00:00:00 GMT</pubDate></item><item><title><![CDATA[Test]]></title><description><![CDATA[<div class="paragraph">
+<p>Test</p>
+</div>]]></description><link>https://dobin.github.io/2015/05/06/Test.html</link><guid isPermaLink="true">https://dobin.github.io/2015/05/06/Test.html</guid><dc:creator><![CDATA[Dobin Rutishauser]]></dc:creator><pubDate>Wed, 06 May 2015 00:00:00 GMT</pubDate></item></channel></rss>
